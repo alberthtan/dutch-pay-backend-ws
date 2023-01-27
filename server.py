@@ -1,5 +1,6 @@
 import asyncio
 import websockets
+import os
 
 CLIENTS = set()
 NUM_CLIENTS = 0
@@ -57,7 +58,7 @@ async def broadcast(message):
 
 # DO NOT BROADCAST IN MAIN
 async def main():
-    async with websockets.serve(handler, host="", port=8080):
+    async with websockets.serve(handler, host="", port=os.environ.get('PORT', 8000)):
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":
