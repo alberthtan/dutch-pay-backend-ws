@@ -57,7 +57,7 @@ async def broadcast(message):
 
 # DO NOT BROADCAST IN MAIN
 async def main():
-    async with websockets.serve(handler, host="10.0.0.236", port=8080):
+    async with websockets.serve(handler, host="", port=8080):
         await asyncio.Future()  # run forever
 
 if __name__ == "__main__":
