@@ -30,7 +30,7 @@ async def handler(websocket):
         table_id = json.loads(message)['table_id']
 
         # Add user to CLIENT_TABLES if first time
-        if not CLIENT_TABLES[table_id]:
+        if not table_id in CLIENT_TABLES:
             CLIENT_TABLES[table_id] = [websocket]
         elif not websocket in CLIENT_TABLES[table_id]:
             CLIENT_TABLES[table_id].append(websocket)
