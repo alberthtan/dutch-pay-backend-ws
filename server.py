@@ -37,6 +37,9 @@ async def handler(websocket):
         # Add user to CLIENT_TABLES if first time
         if not websocket in CLIENT_TABLES[table_id]:
             CLIENT_TABLES[table_id].append(websocket)
+            if(len(MESSAGE_LIST) != 0):
+                await websocket.send(MESSAGE_LIST[-1])
+
         # Otherwise treat message as an edit to cart
         else:
             MESSAGE_LIST.append(message)
