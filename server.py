@@ -34,10 +34,10 @@ async def handler(websocket):
             CLIENT_TABLES[table_id] = [websocket]
         elif not websocket in CLIENT_TABLES[table_id]:
             CLIENT_TABLES[table_id].append(websocket)
+            
         # Otherwise treat message as an edit to cart
-        else:
-            MESSAGE_LIST.append(message)
-            await broadcast(message)
+        MESSAGE_LIST.append(message)
+        await broadcast(message)
 
     try:
         await websocket.wait_closed()
