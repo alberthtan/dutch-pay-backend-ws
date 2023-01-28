@@ -1,10 +1,12 @@
 import asyncio
 import websockets
 import os
+import json
 
 CLIENTS = set()
 NUM_CLIENTS = 0
 MESSAGE_LIST = []
+CLIENT_TABLES = dict()
 
 async def handler(websocket):
     global NUM_CLIENTS
@@ -24,8 +26,18 @@ async def handler(websocket):
     # BROADCAST IS CALLED ONCE PER CLICK
     async for message in websocket:
         print("appending new message to message list")
-        MESSAGE_LIST.append(message)
-        await broadcast(message)
+        
+        table_id = json.loads(message)['table_id']
+
+        # Add user to CLIENT_TABLES if first time
+        if not CLIENT_TABLES[table_id]:
+            CLIENT_TABLES[table_id] = [websocket]
+        elif not websocket in CLIENT_TABLES[table_id]:
+            CLIENT_TABLES[table_id].append(websocket)
+        # Otherwise treat message as an edit to cart
+        else:
+            MESSAGE_LIST.append(message)
+            await broadcast(message)
 
     try:
         await websocket.wait_closed()
