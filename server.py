@@ -19,8 +19,10 @@ async def handler(websocket):
         # print(websocket)
         NUM_CLIENTS += 1
         CLIENTS.add(websocket)
-        if(len(MESSAGE_LIST) != 0):
-            await websocket.send(MESSAGE_LIST[-1])
+    
+    if(len(MESSAGE_LIST) != 0):
+        await websocket.send(MESSAGE_LIST[-1])
+
 
         # print(CLIENTS)
     
