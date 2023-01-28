@@ -11,6 +11,8 @@ CLIENT_TABLES = dict()
 async def handler(websocket):
     global NUM_CLIENTS
     global MESSAGE_LIST
+
+    print(CLIENTS)
     
     if websocket not in CLIENTS:
         # print("adding client " + str(NUM_CLIENTS))
@@ -19,7 +21,6 @@ async def handler(websocket):
         CLIENTS.add(websocket)
         if(len(MESSAGE_LIST) != 0):
             await websocket.send(MESSAGE_LIST[-1])
-            print("sending message to new client")
 
         # print(CLIENTS)
     
@@ -29,15 +30,17 @@ async def handler(websocket):
         print(json.loads(message))
         table_id = json.loads(message)['table_id']
 
-        # Add user to CLIENT_TABLES if first time
+        
         if not table_id in CLIENT_TABLES:
-            CLIENT_TABLES[table_id] = [websocket]
-        elif not websocket in CLIENT_TABLES[table_id]:
+            CLIENT_TABLES[table_id] = []
+
+        # Add user to CLIENT_TABLES if first time
+        if not websocket in CLIENT_TABLES[table_id]:
             CLIENT_TABLES[table_id].append(websocket)
-            
         # Otherwise treat message as an edit to cart
-        MESSAGE_LIST.append(message)
-        await broadcast(message)
+        else:
+            MESSAGE_LIST.append(message)
+            await broadcast(message)
 
     try:
         await websocket.wait_closed()
