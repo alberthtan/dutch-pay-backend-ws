@@ -26,7 +26,7 @@ async def handler(websocket):
     # BROADCAST IS CALLED ONCE PER CLICK
     async for message in websocket:
         print("appending new message to message list")
-        
+        print(json.loads(message))
         table_id = json.loads(message)['table_id']
 
         # Add user to CLIENT_TABLES if first time
