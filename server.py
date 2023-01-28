@@ -12,7 +12,7 @@ async def handler(websocket):
     global NUM_CLIENTS
     global MESSAGE_LIST
 
-    print(CLIENTS)
+    # print(CLIENTS)
     
     if websocket not in CLIENTS:
         # print("adding client " + str(NUM_CLIENTS))
