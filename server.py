@@ -13,7 +13,7 @@ async def handler(websocket):
     global NUM_CLIENTS
     global MESSAGE_LIST
 
-    
+    print('handler')
     if websocket not in CLIENTS:
         NUM_CLIENTS += 1
         CLIENTS.add(websocket)
@@ -23,6 +23,7 @@ async def handler(websocket):
 
     # PROCESS MESSAGE
     async for message in websocket:
+        print('message')
 
         table_id = json.loads(message)['table_id']
 
