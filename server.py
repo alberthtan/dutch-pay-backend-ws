@@ -5,7 +5,7 @@ import json
 
 CLIENTS = set()
 NUM_CLIENTS = 0
-MESSAGE_LIST = []
+MESSAGE_LIST = dict()
 CLIENT_TABLES = dict() # {table_id: {websocket1, websocket2 ...}}
 CLIENT_TABLEID_LOOKUP = dict()# {websocket: table_id}
 
@@ -14,12 +14,12 @@ async def handler(websocket):
     global MESSAGE_LIST
 
     print('handler')
-    if websocket not in CLIENTS:
-        NUM_CLIENTS += 1
-        CLIENTS.add(websocket)
+    # if websocket not in CLIENTS:
+    #     NUM_CLIENTS += 1
+    #     CLIENTS.add(websocket)
     
-        if(len(MESSAGE_LIST) != 0):
-            await websocket.send(MESSAGE_LIST[-1])
+    #     if(len(MESSAGE_LIST) != 0):
+    #         await websocket.send(MESSAGE_LIST[-1])
 
     # PROCESS MESSAGE
     async for message in websocket:
@@ -39,13 +39,15 @@ async def handler(websocket):
 
         # Send latest cart data if user goes to Menu screen from camera screen
         if 'flag' in json.loads(message):
-            if len(MESSAGE_LIST) != 0:
+            if len(MESSAGE_LIST[table_id]) != 0:
                 print("sending message")
                 print(MESSAGE_LIST)
-                await websocket.send(MESSAGE_LIST[-1])
+                await websocket.send(MESSAGE_LIST[table_id][-1])
         # All other messages should be treated as edits to the cart
         else:
-            MESSAGE_LIST.append(message)
+            if not table_id in MESSAGE_LIST:
+                MESSAGE_LIST[table_id] = []
+            MESSAGE_LIST[table_id].append(message)
             print(MESSAGE_LIST)
             await broadcast(message, table_id)
 
@@ -63,7 +65,7 @@ async def handler(websocket):
         # If no users at table, remove table
         if not CLIENT_TABLES[table_id]:
             print("clearing table")
-            MESSAGE_LIST.clear()
+            MESSAGE_LIST[table_id].clear()
             del CLIENT_TABLES[table_id]
             print(CLIENT_TABLES)
 
