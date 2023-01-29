@@ -60,11 +60,13 @@ async def handler(websocket):
         CLIENT_TABLES[table_id].remove(websocket)
         del CLIENT_TABLEID_LOOKUP[websocket]
         CLIENTS.remove(websocket)
+        print(CLIENTS)
 
         if not CLIENT_TABLES[table_id]:
             print("clearing table")
             MESSAGE_LIST.clear()
             del CLIENT_TABLES[table_id]
+            print(CLIENT_TABLES)
 
 async def broadcast(message):
     # i = 0
