@@ -38,10 +38,11 @@ async def handler(websocket):
             CLIENT_TABLEID_LOOKUP[websocket] = table_id
 
         # Send latest cart data if user goes to Menu screen from camera screen
-        if 'flag' in json.loads(message) and len(MESSAGE_LIST) != 0:
-            print("sending message")
-            print(MESSAGE_LIST)
-            await websocket.send(MESSAGE_LIST[-1])
+        if 'flag' in json.loads(message):
+            if len(MESSAGE_LIST) != 0:
+                print("sending message")
+                print(MESSAGE_LIST)
+                await websocket.send(MESSAGE_LIST[-1])
         # All other messages should be treated as edits to the cart
         else:
             MESSAGE_LIST.append(message)
