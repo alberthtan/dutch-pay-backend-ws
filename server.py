@@ -6,7 +6,8 @@ import json
 CLIENTS = set()
 NUM_CLIENTS = 0
 MESSAGE_LIST = []
-CLIENT_TABLES = dict()
+CLIENT_TABLES = dict() # {table_id: {websocekt1, websocekt2 ...}}
+CLIENT_TABLEID_LOOKUP = dict()# {websocket: table_id}
 
 async def handler(websocket):
     global NUM_CLIENTS
@@ -30,6 +31,7 @@ async def handler(websocket):
     async for message in websocket:
         print("appending new message to message list")
         print(json.loads(message))
+        print(CLIENTS)
         table_id = json.loads(message)['table_id']
 
         
@@ -39,6 +41,7 @@ async def handler(websocket):
         # Add user to CLIENT_TABLES if first time
         if not websocket in CLIENT_TABLES[table_id]:
             CLIENT_TABLES[table_id].append(websocket)
+            CLIENT_TABLEID_LOOKUP[websocket] = table_id
             if(len(MESSAGE_LIST) != 0):
                 await websocket.send(MESSAGE_LIST[-1])
 
@@ -47,10 +50,21 @@ async def handler(websocket):
             MESSAGE_LIST.append(message)
             await broadcast(message)
 
+    # SHOULD RUN IF USER ORDERS
     try:
         await websocket.wait_closed()
     finally:
+        # CLEAN UP
+        print("cleaning up")
+        table_id = CLIENT_TABLEID_LOOKUP[websocket]
+        CLIENT_TABLES[table_id].remove(websocket)
+        del CLIENT_TABLEID_LOOKUP[websocket]
         CLIENTS.remove(websocket)
+
+        if not CLIENT_TABLES[table_id]:
+            print("clearing table")
+            MESSAGE_LIST.clear()
+            del CLIENT_TABLES[table_id]
 
 async def broadcast(message):
     # i = 0
