@@ -31,6 +31,9 @@ async def handler(websocket):
 
         # Add user to CLIENT_TABLES if first time
         if not websocket in CLIENT_TABLES[table_id]:
+            print("adding websocket to client tables")
+            print(websocket)
+            print(table_id)
             CLIENT_TABLES[table_id].append(websocket)
             CLIENT_TABLEID_LOOKUP[websocket] = table_id
 
