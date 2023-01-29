@@ -25,6 +25,8 @@ async def handler(websocket):
     
         if(len(MESSAGE_LIST) != 0):
             await websocket.send(MESSAGE_LIST[-1])
+    
+    print(CLIENTS)
 
 
         # print(CLIENTS)
