@@ -39,7 +39,7 @@ async def handler(websocket):
 
         # Send latest cart data if user goes to Menu screen from camera screen
         if 'flag' in json.loads(message):
-            if len(MESSAGE_LIST[table_id]) != 0:
+            if table_id in MESSAGE_LIST and len(MESSAGE_LIST[table_id]) != 0:
                 print("sending message")
                 print(MESSAGE_LIST)
                 await websocket.send(MESSAGE_LIST[table_id][-1])
