@@ -23,7 +23,6 @@ async def handler(websocket):
 
     # PROCESS MESSAGE
     async for message in websocket:
-        print(json.loads(message))
         table_id = json.loads(message)['table_id']
 
         
@@ -42,6 +41,7 @@ async def handler(websocket):
         # If user already exists, treat message as an edit to cart
         else:
             MESSAGE_LIST.append(message)
+            print(MESSAGE_LIST)
             await broadcast(message, table_id)
 
     # USER PRESSES ORDER
