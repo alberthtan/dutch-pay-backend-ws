@@ -10,6 +10,7 @@ CLIENT_TABLES = dict() # {table_id: {websocekt1, websocekt2 ...}}
 CLIENT_TABLEID_LOOKUP = dict()# {websocket: table_id}
 
 async def handler(websocket):
+    print("handler called")
     global NUM_CLIENTS
     global MESSAGE_LIST
 
@@ -18,6 +19,7 @@ async def handler(websocket):
     if websocket not in CLIENTS:
         # print("adding client " + str(NUM_CLIENTS))
         # print(websocket)
+        print("adding websocket")
         NUM_CLIENTS += 1
         CLIENTS.add(websocket)
     
