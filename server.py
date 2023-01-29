@@ -23,31 +23,26 @@ async def handler(websocket):
 
     # PROCESS MESSAGE
     async for message in websocket:
+
         table_id = json.loads(message)['table_id']
-        
+
+        # Add user to CLIENT_TABLES if nonexistent
         if not table_id in CLIENT_TABLES:
             CLIENT_TABLES[table_id] = []
-
-        # Add user to CLIENT_TABLES if first time
         if not websocket in CLIENT_TABLES[table_id]:
             print("adding websocket to client tables")
-            # print(websocket)
-            # print(table_id)
+            print(websocket)
+            print(table_id)
             CLIENT_TABLES[table_id].append(websocket)
             CLIENT_TABLEID_LOOKUP[websocket] = table_id
 
-        # Send latest cart data if user goes to Menu screen
-        if not 'cart' in json.loads(message) and len(MESSAGE_LIST) != 0:
-            print("sending message")
-            print(MESSAGE_LIST[-1])
+        # Send latest cart data if user goes to Menu screen from camera screen
+        if 'flag' in json.loads(message) and len(MESSAGE_LIST) != 0:
             await websocket.send(MESSAGE_LIST[-1])
-
-        # If user already exists, treat message as an edit to cart
+        # All other messages should be treated as edits to the cart
         else:
-            print("appending message")
-            print(message)
             MESSAGE_LIST.append(message)
-            # print(MESSAGE_LIST)
+            print(MESSAGE_LIST)
             await broadcast(message, table_id)
 
     # USER PRESSES ORDER
