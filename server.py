@@ -6,7 +6,7 @@ import json
 CLIENTS = set()
 NUM_CLIENTS = 0
 MESSAGE_LIST = []
-CLIENT_TABLES = dict() # {table_id: {websocekt1, websocekt2 ...}}
+CLIENT_TABLES = dict() # {table_id: {websocket1, websocket2 ...}}
 CLIENT_TABLEID_LOOKUP = dict()# {websocket: table_id}
 
 async def handler(websocket):
@@ -42,7 +42,7 @@ async def handler(websocket):
         # If user already exists, treat message as an edit to cart
         else:
             MESSAGE_LIST.append(message)
-            await broadcast(message)
+            await broadcast(message, table_id)
 
     # USER PRESSES ORDER
     try:
@@ -62,8 +62,9 @@ async def handler(websocket):
             del CLIENT_TABLES[table_id]
             print(CLIENT_TABLES)
 
-async def broadcast(message):
-    for websocket in CLIENTS.copy():
+async def broadcast(message, table_id):
+
+    for websocket in CLIENT_TABLES[table_id].copy():
         try:
             await websocket.send(message)
         except websockets.ConnectionClosed:
