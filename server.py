@@ -32,7 +32,7 @@ async def handler(websocket):
             CLIENT_TABLES[table_id] = []
         if not websocket in CLIENT_TABLES[table_id]:
             print("adding websocket to client tables")
-            print(websocket)
+            print(CLIENT_TABLES)
             print(table_id)
             CLIENT_TABLES[table_id].append(websocket)
             CLIENT_TABLEID_LOOKUP[websocket] = table_id
