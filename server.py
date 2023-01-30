@@ -24,6 +24,7 @@ async def handler(websocket):
     # PROCESS MESSAGE
     async for message in websocket:
         print('message')
+        print(json.loads(message))
 
         table_id = json.loads(message)['table_id']
 
