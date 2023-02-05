@@ -56,6 +56,9 @@ async def handler(websocket):
     # WEBSOCKET CLOSES
     try:
         await websocket.wait_closed()
+    except websockets.exceptions.ConnectionClosedError as e:
+        print("error")
+        print(e)
     finally:
         # Remove user from table and CLIENTS 
         print("cleaning up")
@@ -68,7 +71,7 @@ async def handler(websocket):
         print(CLIENT_TABLES)
 
         # RESTAURANT SHOULD DO THIS
-        
+
         # # If no users at table, remove table
         # if not CLIENT_TABLES[table_id]:
         #     print("clearing table")
