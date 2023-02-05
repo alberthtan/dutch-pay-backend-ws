@@ -22,36 +22,39 @@ async def handler(websocket):
     #         await websocket.send(MESSAGE_LIST[-1])
 
     # PROCESS MESSAGE
-    async for message in websocket:
-        print('message')
-        print(json.loads(message))
+    try: 
+        async for message in websocket:
+            print('message')
+            print(json.loads(message))
 
-        table_id = json.loads(message)['table_id']
+            table_id = json.loads(message)['table_id']
 
-        # Add user to CLIENT_TABLES if nonexistent
-        if not table_id in CLIENT_TABLES:
-            CLIENT_TABLES[table_id] = []
-        if not websocket in CLIENT_TABLES[table_id]:
-            print("adding websocket to client tables")
-            
-            CLIENT_TABLES[table_id].append(websocket)
-            CLIENT_TABLEID_LOOKUP[websocket] = table_id
+            # Add user to CLIENT_TABLES if nonexistent
+            if not table_id in CLIENT_TABLES:
+                CLIENT_TABLES[table_id] = []
+            if not websocket in CLIENT_TABLES[table_id]:
+                print("adding websocket to client tables")
+                
+                CLIENT_TABLES[table_id].append(websocket)
+                CLIENT_TABLEID_LOOKUP[websocket] = table_id
 
-            print(CLIENT_TABLES)
+                print(CLIENT_TABLES)
 
-        # Send latest cart data if user goes to Menu screen from camera screen
-        if 'flag' in json.loads(message):
-            if table_id in MESSAGE_LIST and len(MESSAGE_LIST[table_id]) != 0:
-                print("sending message")
+            # Send latest cart data if user goes to Menu screen from camera screen
+            if 'flag' in json.loads(message):
+                if table_id in MESSAGE_LIST and len(MESSAGE_LIST[table_id]) != 0:
+                    print("sending message")
+                    print(MESSAGE_LIST)
+                    await websocket.send(MESSAGE_LIST[table_id][-1])
+            # All other messages should be treated as edits to the cart
+            else:
+                if not table_id in MESSAGE_LIST:
+                    MESSAGE_LIST[table_id] = []
+                MESSAGE_LIST[table_id].append(message)
                 print(MESSAGE_LIST)
-                await websocket.send(MESSAGE_LIST[table_id][-1])
-        # All other messages should be treated as edits to the cart
-        else:
-            if not table_id in MESSAGE_LIST:
-                MESSAGE_LIST[table_id] = []
-            MESSAGE_LIST[table_id].append(message)
-            print(MESSAGE_LIST)
-            await broadcast(message, table_id)
+                await broadcast(message, table_id)
+    except:
+        print("an error occurred")
 
     # WEBSOCKET CLOSES
     try:
