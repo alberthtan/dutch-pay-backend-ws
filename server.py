@@ -53,8 +53,9 @@ async def handler(websocket):
                 MESSAGE_LIST[table_id].append(message)
                 print(MESSAGE_LIST)
                 await broadcast(message, table_id)
-    except:
+    except Exception as e:
         print("an error occurred")
+        print(e)
 
     # WEBSOCKET CLOSES
     try:
