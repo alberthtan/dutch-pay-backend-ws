@@ -89,11 +89,12 @@ async def broadcast(message, table_id):
             pass
 
 async def main():
-    async with websockets.serve(handler, host="", port=os.environ.get('PORT', 8000)):
-        try:
+    try: 
+        async with websockets.serve(handler, host="", port=os.environ.get('PORT', 8000)):
             await asyncio.Future()  # run forever
-        except:
-            print('closed out')
+    except:
+        print("closed out")
+
 
 if __name__ == "__main__":
     asyncio.run(main())
