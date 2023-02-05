@@ -70,6 +70,7 @@ async def handler(websocket):
         # If no users at table, remove table
         if not CLIENT_TABLES[table_id]:
             print("clearing table")
+            print(MESSAGE_LIST)
             MESSAGE_LIST[table_id].clear()
             del CLIENT_TABLES[table_id]
             print(CLIENT_TABLES)
