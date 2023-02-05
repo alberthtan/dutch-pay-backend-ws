@@ -58,10 +58,13 @@ async def handler(websocket):
     finally:
         # Remove user from table and CLIENTS 
         print("cleaning up")
+        print(CLIENT_TABLES)
         table_id = CLIENT_TABLEID_LOOKUP[websocket]
         CLIENT_TABLES[table_id].remove(websocket)
         del CLIENT_TABLEID_LOOKUP[websocket]
-        CLIENTS.remove(websocket)
+        # CLIENTS.remove(websocket)
+        print("after cleanup")
+        print(CLIENT_TABLES)
 
         # If no users at table, remove table
         if not CLIENT_TABLES[table_id]:
