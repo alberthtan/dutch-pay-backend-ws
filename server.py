@@ -56,7 +56,7 @@ async def handler(websocket):
     # WEBSOCKET CLOSES
     try:
         await websocket.wait_closed()
-    except websockets.exceptions.ConnectionClosedError as e:
+    except Exception as e:
         print("error")
         print(e)
     finally:
