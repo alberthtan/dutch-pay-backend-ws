@@ -33,10 +33,11 @@ async def handler(websocket):
             CLIENT_TABLES[table_id] = []
         if not websocket in CLIENT_TABLES[table_id]:
             print("adding websocket to client tables")
-            print(CLIENT_TABLES)
-            print(table_id)
+            
             CLIENT_TABLES[table_id].append(websocket)
             CLIENT_TABLEID_LOOKUP[websocket] = table_id
+
+            print(CLIENT_TABLES)
 
         # Send latest cart data if user goes to Menu screen from camera screen
         if 'flag' in json.loads(message):
