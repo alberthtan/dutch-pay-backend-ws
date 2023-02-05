@@ -53,7 +53,7 @@ async def handler(websocket):
             print(MESSAGE_LIST)
             await broadcast(message, table_id)
 
-    # USER PRESSES ORDER
+    # WEBSOCKET CLOSES
     try:
         await websocket.wait_closed()
     finally:
@@ -67,13 +67,15 @@ async def handler(websocket):
         print("after cleanup")
         print(CLIENT_TABLES)
 
-        # If no users at table, remove table
-        if not CLIENT_TABLES[table_id]:
-            print("clearing table")
-            print(MESSAGE_LIST)
-            MESSAGE_LIST[table_id].clear()
-            del CLIENT_TABLES[table_id]
-            print(CLIENT_TABLES)
+        # RESTAURANT SHOULD DO THIS
+        
+        # # If no users at table, remove table
+        # if not CLIENT_TABLES[table_id]:
+        #     print("clearing table")
+        #     print(MESSAGE_LIST)
+        #     MESSAGE_LIST[table_id].clear()
+        #     del CLIENT_TABLES[table_id]
+        #     print(CLIENT_TABLES)
 
 async def broadcast(message, table_id):
 
