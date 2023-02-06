@@ -49,6 +49,7 @@ async def handler(websocket):
                     cartItem = CartItem(message['item'], message['user'])
                     print(cartItem)
                     CART_DICT[table_id][message['id']] = cartItem
+                    print("here")
                 elif message['action'] == 'delete':
                     CART_DICT.pop(message['id'], None)
                 elif message['action'] == 'share':
@@ -62,8 +63,8 @@ async def handler(websocket):
                         if cartItem.get_orderedBy() == message['user']:
                             cartItem.set_isOrdered_true()
 
+                print("here2")
                 print(json.dumps(CART_DICT[table_id].values()))
-
                 await broadcast(json.dumps(CART_DICT[table_id].values()), table_id)
                 
     except Exception as e:
