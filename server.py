@@ -38,7 +38,8 @@ async def handler(websocket):
             # Send latest cart data if user goes to Menu screen from camera screen
             if 'flag' in message:
                 if table_id in CART_DICT:
-                    await websocket.send(json.dumps(CART_DICT[table_id]))
+                    json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                    await websocket.send(json_message)
                     
             # All other messages should be treated as edits to the cart
             else:
