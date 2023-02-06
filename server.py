@@ -60,8 +60,8 @@ async def handler(websocket):
                         if cartItem.get_orderedBy() == message['user']:
                             cartItem.set_isOrdered_true()
 
-                print(json.dumps(CART_DICT[table_id].values()))
-                await broadcast(json.dumps(CART_DICT[table_id].values()), table_id)
+                print(json.dumps(list(CART_DICT[table_id].values())))
+                await broadcast(json.dumps(list(CART_DICT[table_id].values())), table_id)
                 
     except Exception as e:
         print("an error occurred")
