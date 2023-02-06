@@ -2,11 +2,15 @@ import json
 
 class CartItem:
 
-    def __init__(self, item, orderedBy):
+    def __init__(self, id, item, orderedBy):
+        self.id = id
         self.item = item
         self.orderedBy = orderedBy
         self.sharedBy = []
         self.isOrdered = False
+
+    def get_id(self):
+        return self.id
 
     def get_item(self):
         return self.item
