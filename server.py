@@ -62,6 +62,8 @@ async def handler(websocket):
                         if cartItem.get_orderedBy() == message['user']:
                             cartItem.set_isOrdered_true()
 
+                print(json.dumps(CART_DICT[table_id].values()))
+
                 await broadcast(json.dumps(CART_DICT[table_id].values()), table_id)
                 
     except Exception as e:
@@ -96,6 +98,7 @@ async def handler(websocket):
         #     print(CLIENT_TABLES)
 
 async def broadcast(message, table_id):
+    print('broadcasting')
 
     for websocket in CLIENT_TABLES[table_id].copy():
         try:
