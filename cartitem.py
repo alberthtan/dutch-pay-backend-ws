@@ -25,11 +25,11 @@ class CartItem:
         return self.isOrdered
 
     def addUserToItem(self, name):
-        if not name in self._sharedBy:
+        if not name in self.sharedBy:
             self.sharedBy.append(name)
 
     def removeUserFromItem(self, name):
-        if name in self._sharedBy:
+        if name in self.sharedBy:
             self.sharedBy.remove(name)
 
     def set_isOrdered_true(self):
