@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import os
 import json
-import CartItem
+from cartitem import CartItem
 
 CLIENTS = set()
 NUM_CLIENTS = 0
@@ -48,7 +48,6 @@ async def handler(websocket):
                     print("ADDING HERE")
                     print(message['user'])
                     cartItem = CartItem(message['item'], message['user'])
-                    print(cartItem)
                     CART_DICT[table_id][message['id']] = cartItem
                 elif message['action'] == 'delete':
                     CART_DICT.pop(message['id'], None)
