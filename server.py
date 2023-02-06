@@ -61,7 +61,7 @@ async def handler(websocket):
                             cartItem.set_isOrdered_true()
 
                 # print(json.dumps(list(CART_DICT[table_id].values())))
-                json_message = json.dumps(list(CART_DICT[table_id].values()), lambda o: o.__dict__, indent=4)
+                json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                 print(json_message)
                 await broadcast(json_message, table_id)
                 
