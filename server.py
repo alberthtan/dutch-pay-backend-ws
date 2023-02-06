@@ -45,7 +45,10 @@ async def handler(websocket):
                 if not table_id in CART_DICT:
                     CART_DICT[table_id] = []
                 if message['action'] == 'add':
+                    print("ADDING HERE")
+                    print(message['user'])
                     cartItem = CartItem(message['item'], message['user'])
+                    print(cartItem)
                     CART_DICT[table_id][message['id']] = cartItem
                 elif message['action'] == 'delete':
                     CART_DICT.pop(message['id'], None)
