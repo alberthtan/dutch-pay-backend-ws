@@ -1,4 +1,4 @@
-
+import json
 
 class CartItem:
 
@@ -30,3 +30,7 @@ class CartItem:
 
     def set_isOrdered_true(self):
         self._isOrdered = True
+
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
