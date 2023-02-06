@@ -49,7 +49,7 @@ async def handler(websocket):
                     cartItem = CartItem(message['id'], message['item'], message['user'])
                     CART_DICT[table_id][message['id']] = cartItem
                 elif message['action'] == 'delete':
-                    CART_DICT.pop(message['id'], None)
+                    CART_DICT[table_id].pop(message['id'], None)
                 elif message['action'] == 'share':
                     if message['id'] in CART_DICT[table_id]:
                         CART_DICT[table_id][message['id']].addUserToItem(message['user'])
