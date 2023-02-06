@@ -28,5 +28,3 @@ class CartItem:
 
     def set_isOrdered_true(self):
         self._isOrdered = True
-
-
