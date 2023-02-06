@@ -46,8 +46,8 @@ async def handler(websocket):
                     CART_DICT[table_id] = []
                 if message['action'] == 'add':
                     print("ADDING HERE")
-                    print(message['user'])
                     cartItem = CartItem(message['item'], message['user'])
+                    print(cartItem)
                     CART_DICT[table_id][message['id']] = cartItem
                 elif message['action'] == 'delete':
                     CART_DICT.pop(message['id'], None)
@@ -56,7 +56,7 @@ async def handler(websocket):
                         CART_DICT[table_id][message['id']].addUserToItem(message['user'])
                 elif message['action'] == 'unshare':
                     if message['id'] in CART_DICT[table_id]:
-                        CART_DICT[table_id][message['id']].removeUserToItem(message['user'])
+                        CART_DICT[table_id][message['id']].removeUserFromItem(message['user'])
                 elif message['action'] == 'order':
                     for cartItem in CART_DICT[table_id].values():
                         if cartItem.get_orderedBy() == message['user']:
