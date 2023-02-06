@@ -48,6 +48,8 @@ async def handler(websocket):
                     print("ADDING HERE")
                     cartItem = CartItem(message['item'], message['user'])
                     print(cartItem)
+                    print(message['id'])
+                    print(type(message['id']))
                     CART_DICT[table_id][message['id']] = cartItem
                     print("here")
                 elif message['action'] == 'delete':
