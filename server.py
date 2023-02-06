@@ -43,15 +43,10 @@ async def handler(websocket):
             # All other messages should be treated as edits to the cart
             else:
                 if not table_id in CART_DICT:
-                    CART_DICT[table_id] = []
+                    CART_DICT[table_id] = dict()
                 if message['action'] == 'add':
-                    print("ADDING HERE")
                     cartItem = CartItem(message['item'], message['user'])
-                    print(cartItem)
-                    print(message['id'])
-                    print(type(message['id']))
                     CART_DICT[table_id][message['id']] = cartItem
-                    print("here")
                 elif message['action'] == 'delete':
                     CART_DICT.pop(message['id'], None)
                 elif message['action'] == 'share':
@@ -65,7 +60,6 @@ async def handler(websocket):
                         if cartItem.get_orderedBy() == message['user']:
                             cartItem.set_isOrdered_true()
 
-                print("here2")
                 print(json.dumps(CART_DICT[table_id].values()))
                 await broadcast(json.dumps(CART_DICT[table_id].values()), table_id)
                 
