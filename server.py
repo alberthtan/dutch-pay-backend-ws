@@ -91,10 +91,10 @@ async def handler(websocket):
 
                 if message['restaurant']: # Joining websocket
                     # Send data to server
-                    json_message= []
+                    json_message = []
                     for table_id in SERVER_TABLE_LOOKUP[websocket]:
-                        json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
-                    await websocket.send(json_message)
+                        json_message.append(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                    await websocket.send(json.dumps(json_message))
                 else: # Modify status of order
                     print("hello!")
                     
