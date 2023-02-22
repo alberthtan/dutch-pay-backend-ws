@@ -7,7 +7,7 @@ class CartItem:
         self.item = item
         self.orderedBy = orderedBy
         self.sharedBy = []
-        self.isOrdered = False
+        self.status = "pending"
 
     def get_id(self):
         return self.id
@@ -32,8 +32,8 @@ class CartItem:
         if name in self.sharedBy:
             self.sharedBy.remove(name)
 
-    def set_isOrdered_true(self):
-        self.isOrdered = True
+    def set_status(self, status):
+        self.status = status
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 

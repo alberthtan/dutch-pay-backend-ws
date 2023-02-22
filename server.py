@@ -63,7 +63,7 @@ async def handler(websocket):
                     elif message['action'] == 'order':
                         for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_orderedBy() == message['user']:
-                                cartItem.set_isOrdered_true()
+                                cartItem.set_status("ordered")
 
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                         print(json_message)
