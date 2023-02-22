@@ -98,7 +98,7 @@ async def handler(websocket):
                             # json_message = list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4
                             json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                             # json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
-                            await websocket.send(json.dumps(json_message))
+                            await websocket.send(json_message)
                 else: # Modify status of order
                     print("hello!")
                     
