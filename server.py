@@ -94,7 +94,8 @@ async def handler(websocket):
                     print(SERVER_TABLE_LOOKUP)
                     json_message = []
                     for table_id in SERVER_TABLE_LOOKUP[websocket]:
-                        json_message.append(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                        if table_id in CART_DICT:
+                            json_message.append(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                     await websocket.send(json.dumps(json_message))
                 else: # Modify status of order
                     print("hello!")
