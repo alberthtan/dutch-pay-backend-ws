@@ -158,7 +158,7 @@ async def broadcast_to_servers(json_message, table_id):
                 "json_message": json_message,
                 "table_id": table_id
             }
-            await websocket.send(message)
+            await websocket.send(json.dumps(message))
         except websockets.ConnectionClosed:
             pass
 
