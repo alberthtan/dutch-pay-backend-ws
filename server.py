@@ -151,8 +151,8 @@ async def handler(websocket):
                             print(json_message)
                             print(message)
                             # print("sending message: " + str(json_message))
-                            await broadcast_to_servers(json_message, table_id)
-                            # await server.send(json.dumps(message))
+                            # await broadcast_to_servers(json_message, table_id)
+                            await server.send(json.dumps(message))
                             print("done")
                 
     except Exception as e:
