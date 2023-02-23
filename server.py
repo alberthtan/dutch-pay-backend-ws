@@ -50,7 +50,7 @@ async def handler(websocket):
                     if not table_id in CART_DICT:
                         CART_DICT[table_id] = dict()
                     if message['action'] == 'add':
-                        cartItem = CartItem(message['id'], message['item'], message['user'])
+                        cartItem = CartItem(message['id'], message['item'], message['user'], table_id)
                         CART_DICT[table_id][message['id']] = cartItem
                     elif message['action'] == 'delete':
                         CART_DICT[table_id].pop(message['id'], None)
@@ -100,11 +100,7 @@ async def handler(websocket):
                             # json_message = list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4
                             json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                             # json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
-                            message = {
-                                "json_message": json_message,
-                                "table_id": table_id
-                            }
-                            await websocket.send(json.dumps(message))
+                            await websocket.send(json_message)
                 else: # Modify status of order
                     print("hello!")
                     
@@ -149,16 +145,12 @@ async def broadcast_to_customers(message, table_id):
         except websockets.ConnectionClosed:
             pass
         
-async def broadcast_to_servers(json_message, table_id):
+async def broadcast_to_servers(message, table_id):
     print('broadcasting to servers of ' + str(table_id))
 
     for websocket in SERVER_TABLES[table_id].copy():
         try:
-            message = {
-                "json_message": json_message,
-                "table_id": table_id
-            }
-            await websocket.send(json.dumps(message))
+            await websocket.send(message)
         except websockets.ConnectionClosed:
             pass
 
