@@ -95,11 +95,7 @@ async def handler(websocket):
                     json_message = []
                     for table_id in SERVER_TABLE_LOOKUP[websocket]:
                         if table_id in CART_DICT:
-                            # print("UYODFUOUFOISDJFIOLJDFOIFJIOSDJFOSiJFF")
-                            # print(CART_DICT[table_id].values())
-                            # json_message = list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4
                             json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
-                            # json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
                     message = {
                         "json_message": json.dumps(json_message),
                         "refresh": True
