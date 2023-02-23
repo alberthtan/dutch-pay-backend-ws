@@ -137,13 +137,16 @@ async def handler(websocket):
                         for server in SERVER_TABLES[table_id]:
                             print("clearing server")
                             json_message = []
-                            for table_id in SERVER_TABLE_LOOKUP[server]:
-                                if table_id in CART_DICT:
-                                    json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
+                            for id in SERVER_TABLE_LOOKUP[server]:
+                                if id in CART_DICT:
+                                    print("nothing hopefully")
+                                    print(CART_DICT[id])
+                                    json_message.append(json.dumps(list(CART_DICT[id].values()), default=lambda o: o.__dict__, indent=4))
                             message = {
                                 "json_message": json.dumps(json_message),
                                 "refresh": True
                             }
+                            print(json_message)
                             print(message)
                             # print("sending message: " + str(json_message))
                             await server.send(json.dumps(message))
