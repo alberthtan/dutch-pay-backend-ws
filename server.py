@@ -9,7 +9,7 @@ NUM_CLIENTS = 0
 # MESSAGE_LIST = dict()
 CLIENT_TABLES = dict() # {table_id: {websocket1, websocket2 ...}}
 CLIENT_TABLEID_LOOKUP = dict()# {websocket: table_id}
-CART_DICT = dict() # {table_id: [cartItem, cartItem, ...]}
+CART_DICT = dict() # {table_id: {id: cartItem, id: cartItem, ...}}
 
 SERVER_TABLES = dict() # {table_id: [websocket1, websocket2]}
 SERVER_TABLE_LOOKUP = dict() # {websocket: [table_id, ...]}
@@ -108,10 +108,12 @@ async def handler(websocket):
                         print("SENDING")
                         table_id = message['table_id']
                         print(CART_DICT[table_id])
-                        for cartItem in CART_DICT[table_id].values():
-                            if cartItem.get_id() == message['item_id']:
-                                cartItem.set_status("received")
-                                break
+                        item_id = message['item_id']
+                        CART_DICT[table_id][item_id].set_status("received")
+                        # for cartItem in CART_DICT[table_id].values():
+                        #     if cartItem.get_id() == message['item_id']:
+                        #         cartItem.set_status("received")
+                        #         break
 
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                         print(json_message)
@@ -120,10 +122,8 @@ async def handler(websocket):
 
                     elif message['action'] == "delete":
                         table_id = message['table_id']
-                        for cartItem in CART_DICT[table_id].values():
-                            if cartItem.get_id() == message['item_id']:
-                                CART_DICT[table_id].remove(cartItem)
-                                break
+                        item_id = message['item_id']
+                        del CART_DICT[table_id][item_id]
                     
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                         print(json_message)
