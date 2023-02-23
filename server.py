@@ -127,7 +127,7 @@ async def handler(websocket):
                         print(CART_DICT)
 
                         # Clear customers from table
-                        for client in CLIENT_TABLES[table_id]:
+                        for client in CLIENT_TABLES[table_id].copy():
                             message = {
                                 "clear": True
                             }
