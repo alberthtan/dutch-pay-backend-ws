@@ -62,9 +62,10 @@ async def handler(websocket):
                             CART_DICT[table_id][message['id']].removeUserFromItem(message['user'])
                     elif message['action'] == 'order':
                         for cartItem in CART_DICT[table_id].values():
-                            if cartItem.get_orderedBy() == message['user']:
-                                if cartItem.get_status == "pending":
+                            if cartItem.get_orderedBy() == message['user'] and cartItem.get_status == "pending":
                                     cartItem.set_status("ordered")
+                                    print("HEREEEE  ")
+                                    print(cartItem)
 
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                         print(json_message)
