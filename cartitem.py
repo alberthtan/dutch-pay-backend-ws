@@ -22,8 +22,8 @@ class CartItem:
     def get_sharedBy(self):
         return self.sharedBy
 
-    def get_isOrdered(self):
-        return self.isOrdered
+    def get_status(self):
+        return self.status
 
     def addUserToItem(self, name):
         if not name in self.sharedBy:
