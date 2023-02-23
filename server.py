@@ -7,7 +7,7 @@ from cartitem import CartItem
 CLIENTS = set()
 NUM_CLIENTS = 0
 # MESSAGE_LIST = dict()
-CLIENT_TABLES = dict() # {table_id: {websocket1, websocket2 ...}}
+CLIENT_TABLES = dict() # {table_id: [websocket1, websocket2 ...]}
 CLIENT_TABLE_LOOKUP = dict()# {websocket: table_id}
 CART_DICT = dict() # {table_id: {id: cartItem, id: cartItem, ...}}
 
@@ -151,7 +151,8 @@ async def handler(websocket):
                             print(json_message)
                             print(message)
                             # print("sending message: " + str(json_message))
-                            await server.send(json.dumps(message))
+                            await broadcast_to_servers(json_message, table_id)
+                            # await server.send(json.dumps(message))
                             print("done")
                 
     except Exception as e:
