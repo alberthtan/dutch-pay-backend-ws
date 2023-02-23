@@ -39,8 +39,6 @@ async def handler(websocket):
                     CLIENT_TABLEID_LOOKUP[websocket] = table_id
 
                     print(CLIENT_TABLES)
-                print("here 0")
-                print(message['flag'])
                     
                 # Send latest cart data if user goes to Menu screen from camera screen
                 if message['flag']:
@@ -49,8 +47,6 @@ async def handler(websocket):
                         await websocket.send(json_message)
                 # All other messages should be treated as edits to the cart
                 else:
-                    print("here 1")
-                    print(message['action'])
                     if not table_id in CART_DICT:
                         CART_DICT[table_id] = dict()
                     if message['action'] == 'add':
@@ -66,6 +62,8 @@ async def handler(websocket):
                             CART_DICT[table_id][message['id']].removeUserFromItem(message['user'])
                     elif message['action'] == 'order':
                         for cartItem in CART_DICT[table_id].values():
+                            print("here 1")
+                            print(cartItem.get_status)
                             if cartItem.get_orderedBy() == message['user']:
                                     cartItem.set_status("ordered")
                                     print("HEREEEE  ")
