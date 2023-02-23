@@ -8,7 +8,7 @@ CLIENTS = set()
 NUM_CLIENTS = 0
 # MESSAGE_LIST = dict()
 CLIENT_TABLES = dict() # {table_id: {websocket1, websocket2 ...}}
-CLIENT_TABLEID_LOOKUP = dict()# {websocket: table_id}
+CLIENT_TABLE_LOOKUP = dict()# {websocket: table_id}
 CART_DICT = dict() # {table_id: {id: cartItem, id: cartItem, ...}}
 
 SERVER_TABLES = dict() # {table_id: [websocket1, websocket2]}
@@ -16,7 +16,6 @@ SERVER_TABLE_LOOKUP = dict() # {websocket: [table_id, ...]}
 
 async def handler(websocket):
     global NUM_CLIENTS
-    # global MESSAGE_LIST
 
     print('handler')
     try: 
@@ -28,7 +27,6 @@ async def handler(websocket):
             if 'flag' in message:
                 table_id = message['table_id']
 
-
                 # Add user to CLIENT_TABLES if nonexistent
                 if not table_id in CLIENT_TABLES:
                     CLIENT_TABLES[table_id] = []
@@ -36,7 +34,7 @@ async def handler(websocket):
                     print("adding websocket to client tables")
                     
                     CLIENT_TABLES[table_id].append(websocket)
-                    CLIENT_TABLEID_LOOKUP[websocket] = table_id
+                    CLIENT_TABLE_LOOKUP[websocket] = table_id
 
                     print(CLIENT_TABLES)
                     
@@ -105,18 +103,11 @@ async def handler(websocket):
                     await websocket.send(json.dumps(message))
                 else: # Modify status of order
                     if message['action'] == "send":
-                        print("SENDING")
                         table_id = message['table_id']
-                        print(CART_DICT[table_id])
                         item_id = message['item_id']
                         CART_DICT[table_id][item_id].set_status("received")
-                        # for cartItem in CART_DICT[table_id].values():
-                        #     if cartItem.get_id() == message['item_id']:
-                        #         cartItem.set_status("received")
-                        #         break
-
+                        
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
-                        print(json_message)
                         await broadcast_to_servers(json_message, table_id)
                         await broadcast_to_customers(json_message, table_id)
 
@@ -124,32 +115,33 @@ async def handler(websocket):
                         table_id = message['table_id']
                         item_id = message['item_id']
                         del CART_DICT[table_id][item_id]
-                    
+                        
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
-                        print(json_message)
                         await broadcast_to_servers(json_message, table_id)
                         await broadcast_to_customers(json_message, table_id)
 
-                    # elif message['action'] == "clear":
-                    #     table_id = message['table_id']
-                    #     # for cartItem in CART_DICT[table_id].values():
-                    #     #     if cartItem.get_id() == message['item_id']:
-                    #     #         CART_DICT[table_id].remove(cartItem)
-                    #     #         break
-                    #     del CART_DICT[table_id]
+                    elif message['action'] == "clear":
+                        table_id = message['table_id']
+                        del CART_DICT[table_id]
 
-                    #     json_message = []
-                    #     for table_id in SERVER_TABLE_LOOKUP[websocket]:
-                    #         if table_id in CART_DICT:
-                    #             json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
-                    #     message = {
-                    #         "json_message": json.dumps(json_message),
-                    #         "refresh": True
-                    #     }
-                    #     await websocket.send(json.dumps(message))
+                        # Clear customers from table
+                        for client in CLIENT_TABLES[table_id]:
+                            message = {
+                                "clear": True
+                            }
+                            await client.send(json.dumps(message))
 
-                    
-                    
+                        # Update servers with new set of tables (after deleting)
+                        for server in SERVER_TABLES[table_id]:
+                            json_message = []
+                            for table_id in SERVER_TABLE_LOOKUP[server]:
+                                if table_id in CART_DICT:
+                                    json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
+                            message = {
+                                "json_message": json.dumps(json_message),
+                                "refresh": True
+                            }
+                            await server.send(json.dumps(message))
                 
     except Exception as e:
         print("an error occurred")
@@ -162,25 +154,28 @@ async def handler(websocket):
         print("error")
         print(e)
     finally:
-        # Remove user from table and CLIENTS 
         print("cleaning up")
-        print(CLIENT_TABLES)
-        table_id = CLIENT_TABLEID_LOOKUP[websocket]
-        CLIENT_TABLES[table_id].remove(websocket)
-        del CLIENT_TABLEID_LOOKUP[websocket]
-        # CLIENTS.remove(websocket)
-        print("after cleanup")
-        print(CLIENT_TABLES)
+        if websocket in CLIENT_TABLE_LOOKUP:
+            table_id = CLIENT_TABLE_LOOKUP[websocket]
+            CLIENT_TABLES[table_id].remove(websocket)
+            del CLIENT_TABLE_LOOKUP[websocket]
+            print("after cleanup client")
+            print(CLIENT_TABLE_LOOKUP)
+            print(CLIENT_TABLES)
 
-        # RESTAURANT SHOULD DO THIS
+        if websocket in SERVER_TABLE_LOOKUP:
+            table_id = SERVER_TABLE_LOOKUP[websocket]
+            SERVER_TABLES[table_id].remove(websocket)
+            del SERVER_TABLE_LOOKUP[websocket]
 
-        # # If no users at table, remove table
-        # if not CLIENT_TABLES[table_id]:
-        #     print("clearing table")
-        #     print(MESSAGE_LIST)
-        #     MESSAGE_LIST[table_id].clear()
-        #     del CLIENT_TABLES[table_id]
-        #     print(CLIENT_TABLES)
+            if(len(SERVER_TABLES[table_id]) == 0):
+                del SERVER_TABLES[table_id]
+            print("after cleanup server")
+            print(SERVER_TABLE_LOOKUP)
+            print(SERVER_TABLES)
+
+        
+
 
 async def broadcast_to_customers(message, table_id):
     print('broadcasting to customers of ' + str(table_id))
