@@ -123,6 +123,8 @@ async def handler(websocket):
                     elif message['action'] == "clear":
                         table_id = message['table_id']
                         del CART_DICT[table_id]
+                        print("CLEAR")
+                        print(CART_DICT)
 
                         # Clear customers from table
                         for client in CLIENT_TABLES[table_id]:
@@ -133,6 +135,7 @@ async def handler(websocket):
 
                         # Update servers with new set of tables (after deleting)
                         for server in SERVER_TABLES[table_id]:
+                            print("clearing server")
                             json_message = []
                             for table_id in SERVER_TABLE_LOOKUP[server]:
                                 if table_id in CART_DICT:
@@ -141,6 +144,7 @@ async def handler(websocket):
                                 "json_message": json.dumps(json_message),
                                 "refresh": True
                             }
+                            print("sending message: " + json_message)
                             await server.send(json.dumps(message))
                 
     except Exception as e:
