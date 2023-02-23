@@ -100,7 +100,11 @@ async def handler(websocket):
                             # json_message = list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4
                             json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                             # json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
-                            await websocket.send(json_message)
+                            message = {
+                                "json_message": json_message,
+                                "table_id": table_id
+                            }
+                            await websocket.send(json.dumps(message))
                 else: # Modify status of order
                     print("hello!")
                     
@@ -145,12 +149,16 @@ async def broadcast_to_customers(message, table_id):
         except websockets.ConnectionClosed:
             pass
         
-async def broadcast_to_servers(message, table_id):
+async def broadcast_to_servers(json_message, table_id):
     print('broadcasting to servers of ' + str(table_id))
 
     for websocket in SERVER_TABLES[table_id].copy():
         try:
-            await websocket.send(message)
+            message = {
+                "json_message": json_message,
+                "table_id": table_id
+            }
+            await websocket.send(json.dumps(message))
         except websockets.ConnectionClosed:
             pass
 
