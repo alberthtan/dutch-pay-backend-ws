@@ -134,7 +134,7 @@ async def handler(websocket):
                             await client.send(json.dumps(message))
 
                         # Update servers with new set of tables (after deleting)
-                        for server in SERVER_TABLES[table_id]:
+                        for server in SERVER_TABLES[table_id].copy():
                             print("clearing server")
                             json_message = []
                             for id in SERVER_TABLE_LOOKUP[server]:
