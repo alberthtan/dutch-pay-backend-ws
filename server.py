@@ -102,14 +102,15 @@ async def handler(websocket):
                     }
                     await websocket.send(json.dumps(message))
                 else: # Modify status of order
-                    for cartItem in CART_DICT[table_id].values:
-                        if cartItem.get_id() == message['id']:
-                            cartItem.set_status("received")
-                            break
+                    if message['action'] == "send":
+                        for cartItem in CART_DICT[table_id].values:
+                            if cartItem.get_id() == message['item_id']:
+                                cartItem.set_status("received")
+                                break
 
-                    json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
-                    print(json_message)
-                    await broadcast_to_servers(json_message, table_id)
+                        json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                        print(json_message)
+                        await broadcast_to_servers(json_message, table_id)
                     
 
                     
