@@ -105,7 +105,10 @@ async def handler(websocket):
                     await websocket.send(json.dumps(message))
                 else: # Modify status of order
                     if message['action'] == "send":
-                        for cartItem in CART_DICT[table_id].values:
+                        print("SENDING")
+                        table_id = message['table_id']
+                        print(CART_DICT[table_id])
+                        for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_id() == message['item_id']:
                                 cartItem.set_status("received")
                                 break
