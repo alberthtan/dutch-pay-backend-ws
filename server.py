@@ -146,6 +146,7 @@ async def handler(websocket):
                                     json_message.append(json.dumps(list(CART_DICT[id].values()), default=lambda o: o.__dict__, indent=4))
                             message = {
                                 "json_message": json.dumps(json_message),
+                                "table_id": table_id,
                                 "refresh": True
                             }
                             print(json_message)
