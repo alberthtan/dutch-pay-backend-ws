@@ -144,9 +144,10 @@ async def handler(websocket):
                                 "json_message": json.dumps(json_message),
                                 "refresh": True
                             }
-                            print(json_message)
+                            print(message)
                             # print("sending message: " + str(json_message))
                             await server.send(json.dumps(message))
+                            print("done")
                 
     except Exception as e:
         print("an error occurred")
