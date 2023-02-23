@@ -117,7 +117,36 @@ async def handler(websocket):
                         print(json_message)
                         await broadcast_to_servers(json_message, table_id)
                         await broadcast_to_customers(json_message, table_id)
+
+                    elif message['action'] == "delete":
+                        table_id = message['table_id']
+                        for cartItem in CART_DICT[table_id].values():
+                            if cartItem.get_id() == message['item_id']:
+                                CART_DICT[table_id].remove(cartItem)
+                                break
                     
+                        json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                        print(json_message)
+                        await broadcast_to_servers(json_message, table_id)
+                        await broadcast_to_customers(json_message, table_id)
+
+                    # elif message['action'] == "clear":
+                    #     table_id = message['table_id']
+                    #     # for cartItem in CART_DICT[table_id].values():
+                    #     #     if cartItem.get_id() == message['item_id']:
+                    #     #         CART_DICT[table_id].remove(cartItem)
+                    #     #         break
+                    #     del CART_DICT[table_id]
+
+                    #     json_message = []
+                    #     for table_id in SERVER_TABLE_LOOKUP[websocket]:
+                    #         if table_id in CART_DICT:
+                    #             json_message.append(json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4))
+                    #     message = {
+                    #         "json_message": json.dumps(json_message),
+                    #         "refresh": True
+                    #     }
+                    #     await websocket.send(json.dumps(message))
 
                     
                     
