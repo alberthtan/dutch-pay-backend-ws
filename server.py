@@ -75,23 +75,25 @@ async def handler(websocket):
 
             # Message from a Server
             if 'restaurant' in message:
-                # Add user to SERVER_TABLES if nonexistent
-                for table_id in message['table_id_list']:
-                    if not table_id in SERVER_TABLES:
-                        SERVER_TABLES[table_id] = []
-                    if not websocket in SERVER_TABLES[table_id]:
-                        print("adding websocket to SERVER tables")
-                        SERVER_TABLES[table_id].append(websocket)
-
-                    # Add table to SERVER_TABLE_LOOKUP if nonexistent
-                    if not websocket in SERVER_TABLE_LOOKUP:
-                        SERVER_TABLE_LOOKUP[websocket] = []
-                    if not table_id in SERVER_TABLE_LOOKUP[websocket]:
-                        SERVER_TABLE_LOOKUP[websocket].append(table_id)
 
                 if message['restaurant']: # Joining websocket
                     # Send data to server
-                    print(SERVER_TABLE_LOOKUP)
+
+                    # Add user to SERVER_TABLES if nonexistent
+                    for table_id in message['table_id_list']:
+                        if not table_id in SERVER_TABLES:
+                            SERVER_TABLES[table_id] = []
+                        if not websocket in SERVER_TABLES[table_id]:
+                            print("adding websocket to SERVER tables")
+                            SERVER_TABLES[table_id].append(websocket)
+
+                        # Add table to SERVER_TABLE_LOOKUP if nonexistent
+                        if not websocket in SERVER_TABLE_LOOKUP:
+                            SERVER_TABLE_LOOKUP[websocket] = []
+                        if not table_id in SERVER_TABLE_LOOKUP[websocket]:
+                            SERVER_TABLE_LOOKUP[websocket].append(table_id)
+
+                    # print(SERVER_TABLE_LOOKUP)
                     json_message = []
                     for table_id in SERVER_TABLE_LOOKUP[websocket]:
                         if table_id in CART_DICT:
