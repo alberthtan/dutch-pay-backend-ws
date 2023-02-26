@@ -100,6 +100,9 @@ async def handler(websocket):
                         "json_message": json.dumps(json_message),
                         "refresh": True
                     }
+                    print("GOT HERE FUCKER")
+                    print(SERVER_TABLES)
+                    print(SERVER_TABLE_LOOKUP)
                     await websocket.send(json.dumps(message))
                 else: # Modify status of order
                     if message['action'] == "send":
