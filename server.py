@@ -59,15 +59,22 @@ async def handler(websocket):
                         if message['id'] in CART_DICT[table_id]:
                             CART_DICT[table_id][message['id']].removeUserFromItem(message['user'])
                     elif message['action'] == 'order':
+                        print("WS - customer is ordering")
                         for cartItem in CART_DICT[table_id].values():
+                            print(cartItem)
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
-                                    cartItem.set_status("ordered")
+                                print("set status to ordered")
+                                print(message['user'])
+                                cartItem.set_status("ordered")
+                        
 
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                        print("broadcasting this message to servers:")
                         print(json_message)
                         await broadcast_to_servers(json_message, table_id)
 
                     json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
+                    print("broadcasting this message to customers:")
                     print(json_message)
                     await broadcast_to_customers(json_message, table_id)
 
