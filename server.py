@@ -209,6 +209,8 @@ async def broadcast_to_customers(message, table_id):
         
 async def broadcast_to_servers(json_message, table_id):
     print('broadcasting to servers of ' + str(table_id))
+    print(SERVER_TABLES)
+    print(SERVER_TABLES[table_id])
 
     for websocket in SERVER_TABLES[table_id].copy():
         print("broadcast")
