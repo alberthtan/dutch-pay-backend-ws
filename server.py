@@ -184,12 +184,12 @@ async def handler(websocket):
             print(CLIENT_TABLES)
 
         if websocket in SERVER_TABLE_LOOKUP:
-            table_id = SERVER_TABLE_LOOKUP[websocket]
-            SERVER_TABLES[table_id].remove(websocket)
+            for table_id in SERVER_TABLE_LOOKUP[websocket]:
+                SERVER_TABLES[table_id].remove(websocket)
+                if(len(SERVER_TABLES[table_id]) == 0):
+                    del SERVER_TABLES[table_id]
             del SERVER_TABLE_LOOKUP[websocket]
 
-            if(len(SERVER_TABLES[table_id]) == 0):
-                del SERVER_TABLES[table_id]
             print("after cleanup server")
             print(SERVER_TABLE_LOOKUP)
             print(SERVER_TABLES)
