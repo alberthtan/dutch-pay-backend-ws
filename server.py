@@ -72,6 +72,7 @@ async def handler(websocket):
                         print("broadcasting this message to servers:")
                         print(json_message)
                         await broadcast_to_servers(json_message, table_id)
+                        print("done")
 
                     json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
                     print("broadcasting this message to customers:")
