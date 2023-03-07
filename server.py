@@ -209,21 +209,15 @@ async def broadcast_to_customers(message, table_id):
         
 async def broadcast_to_servers(json_message, table_id):
     print('broadcasting to servers of ' + str(table_id))
-    print(SERVER_TABLES)
-    print(SERVER_TABLES[table_id])
 
     if table_id in SERVER_TABLES:
         for websocket in SERVER_TABLES[table_id].copy():
-            print("broadcast")
-            print(websocket)
             try:
                 message = {
                     "json_message": json_message,
                     "table_id": table_id,
                     "refresh": False
                 }
-                print("message")
-                print(message)
                 await websocket.send(json.dumps(message))
             except websockets.ConnectionClosed:
                 pass
