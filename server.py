@@ -65,6 +65,23 @@ async def handler(websocket):
                         if message['id'] in CART_DICT[table_id]:
                             CART_DICT[table_id][message['id']].removeUserFromItem(message['user'])
                     elif message['action'] == 'order':
+
+                        user_id = json.loads(message['user'])['id']
+                        print(json.loads(message['user']))
+
+                        if table_id not in USERS_AT_TABLES:
+                            USERS_AT_TABLES[table_id] = []
+                        if user_id not in USERS_AT_TABLES[table_id]:
+                            USERS_AT_TABLES[table_id].append(user_id)
+
+                        if table_id not in PAYMENT_INTENTS:
+                            PAYMENT_INTENTS[table_id] = dict()
+
+                        if user_id not in PAYMENT_INTENTS[table_id]:
+                            PAYMENT_INTENTS[table_id][user_id] = []
+
+                        PAYMENT_INTENTS[table_id][user_id].append(message['payment'])
+
                         for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
                                 cartItem.set_status("ordered")
@@ -175,22 +192,22 @@ async def handler(websocket):
                             await server.send(json.dumps(message))
                             print("done")
 
-            if 'payment_intent' in message:
-                table_id = message['table_id']
-                user_id = message['user_id']
+            # if 'payment_intent' in message:
+            #     table_id = message['table_id']
+            #     user_id = message['user_id']
 
-                if table_id not in USERS_AT_TABLES:
-                    USERS_AT_TABLES[table_id] = []
-                if user_id not in USERS_AT_TABLES[table_id]:
-                    USERS_AT_TABLES[table_id].append(user_id)
+            #     if table_id not in USERS_AT_TABLES:
+            #         USERS_AT_TABLES[table_id] = []
+            #     if user_id not in USERS_AT_TABLES[table_id]:
+            #         USERS_AT_TABLES[table_id].append(user_id)
 
-                if table_id not in PAYMENT_INTENTS:
-                    PAYMENT_INTENTS[table_id] = dict()
+            #     if table_id not in PAYMENT_INTENTS:
+            #         PAYMENT_INTENTS[table_id] = dict()
 
-                if user_id not in PAYMENT_INTENTS[table_id]:
-                    PAYMENT_INTENTS[table_id][user_id] = []
+            #     if user_id not in PAYMENT_INTENTS[table_id]:
+            #         PAYMENT_INTENTS[table_id][user_id] = []
 
-                PAYMENT_INTENTS[table_id][user_id].append(message['payment'])
+            #     PAYMENT_INTENTS[table_id][user_id].append(message['payment'])
 
                 
     except Exception as e:
