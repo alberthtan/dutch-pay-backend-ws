@@ -2,7 +2,10 @@ import asyncio
 import websockets
 import os
 import json
+import stripe
 from cartitem import CartItem
+
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 CLIENTS = set()
 NUM_CLIENTS = 0
@@ -13,6 +16,9 @@ CART_DICT = dict() # {table_id: {id: cartItem, id: cartItem, ...}}
 
 SERVER_TABLES = dict() # {table_id: [websocket1, websocket2]}
 SERVER_TABLE_LOOKUP = dict() # {websocket: [table_id, ...]}
+
+PAYMENT_INTENTS = dict() # {table_id1: {user_id: [payment_intent1, payment_intent2, ...]}, 
+USERS_AT_TABLES = dict() # {tabled_id: [user_id]}
 
 async def handler(websocket):
     global NUM_CLIENTS
@@ -125,6 +131,16 @@ async def handler(websocket):
 
                     elif message['action'] == "clear":
                         table_id = message['table_id']
+
+                        for user in USERS_AT_TABLES[table_id]:
+                            for p_id in PAYMENT_INTENTS[table_id][user]:
+                                payment_intent = stripe.PaymentIntent.retrieve(p_id)
+                                payment_intent.cancel()
+                            del PAYMENT_INTENTS[table_id][user]
+                        
+                        del PAYMENT_INTENTS[table_id]
+                        del USERS_AT_TABLES[table_id]
+
                         del CART_DICT[table_id]
                         print("CLEAR")
                         print(CART_DICT)
@@ -158,6 +174,24 @@ async def handler(websocket):
                             # await broadcast_to_servers(json_message, table_id)
                             await server.send(json.dumps(message))
                             print("done")
+
+            if 'payment_intent' in message:
+                table_id = message['table_id']
+                user_id = message['user_id']
+
+                if table_id not in USERS_AT_TABLES:
+                    USERS_AT_TABLES[table_id] = []
+                if user_id not in USERS_AT_TABLES[table_id]:
+                    USERS_AT_TABLES[table_id].append(user_id)
+
+                if table_id not in PAYMENT_INTENTS:
+                    PAYMENT_INTENTS[table_id] = dict()
+
+                if user_id not in PAYMENT_INTENTS[table_id]:
+                    PAYMENT_INTENTS[table_id][user_id] = []
+
+                PAYMENT_INTENTS[table_id][user_id].append(message['payment'])
+
                 
     except Exception as e:
         print("an error occurred")
