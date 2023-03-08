@@ -80,7 +80,7 @@ async def handler(websocket):
                         if user_id not in PAYMENT_INTENTS[table_id]:
                             PAYMENT_INTENTS[table_id][user_id] = []
 
-                        PAYMENT_INTENTS[table_id][user_id].append(message['payment'])
+                        PAYMENT_INTENTS[table_id][user_id].append(message['payment_intent'])
 
                         for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
