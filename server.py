@@ -96,6 +96,7 @@ async def handler(websocket):
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
                                 print("setting now")
                                 cartItem.set_status("ordered")
+                                print(uuid4())
                                 cartItem.set_order_id(uuid4())
                                 print("setting done")
 
