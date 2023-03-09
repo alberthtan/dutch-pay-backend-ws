@@ -97,7 +97,7 @@ async def handler(websocket):
                                 print("setting now")
                                 cartItem.set_status("ordered")
                                 print(uuid4())
-                                cartItem.set_order_id(uuid4())
+                                cartItem.set_order_id(str(uuid4()))
                                 print("setting done")
 
                         print("here7")
