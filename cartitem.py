@@ -9,6 +9,7 @@ class CartItem:
         self.sharedBy = []
         self.status = "pending"
         self.table_id = table_id
+        self.order_id = None
 
     def get_id(self):
         return self.id
@@ -35,6 +36,9 @@ class CartItem:
 
     def set_status(self, status):
         self.status = status
+
+    def set_order_id(self, id):
+        self.order_id = id
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 

@@ -4,6 +4,7 @@ import os
 import json
 import stripe
 from cartitem import CartItem
+from uuid import uuid4
 
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
@@ -85,6 +86,7 @@ async def handler(websocket):
                         for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
                                 cartItem.set_status("ordered")
+                                cartItem.set_order_id(uuid4())
                         
 
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
