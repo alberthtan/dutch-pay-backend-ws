@@ -155,6 +155,8 @@ async def handler(websocket):
                     elif message['action'] == "delete":
                         table_id = message['table_id']
                         item_id = message['item_id']
+                        print("delete!")
+                        print(CART_DICT[table_id][item_id])
                         del CART_DICT[table_id][item_id]
                         
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
