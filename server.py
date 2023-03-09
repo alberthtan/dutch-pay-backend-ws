@@ -71,22 +71,35 @@ async def handler(websocket):
                         print(json.loads(message['user']))
 
                         if table_id not in USERS_AT_TABLES:
+                            print("here1")
                             USERS_AT_TABLES[table_id] = []
                         if user_id not in USERS_AT_TABLES[table_id]:
                             USERS_AT_TABLES[table_id].append(user_id)
+                            print("here2")
 
+                        print("here3")
                         if table_id not in PAYMENT_INTENTS:
                             PAYMENT_INTENTS[table_id] = dict()
+
+                        print("here4")
 
                         if user_id not in PAYMENT_INTENTS[table_id]:
                             PAYMENT_INTENTS[table_id][user_id] = []
 
+                        print("here5")
+
                         PAYMENT_INTENTS[table_id][user_id].append(message['payment_intent'])
+
+                        print("here6")
 
                         for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
+                                print("setting now")
                                 cartItem.set_status("ordered")
                                 cartItem.set_order_id(uuid4())
+                                print("setting done")
+
+                        print("here7")
                         
 
                         json_message = json.dumps(list(CART_DICT[table_id].values()), default=lambda o: o.__dict__, indent=4)
