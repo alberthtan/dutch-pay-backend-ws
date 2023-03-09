@@ -91,13 +91,12 @@ async def handler(websocket):
                         PAYMENT_INTENTS[table_id][user_id].append(message['payment_intent'])
 
                         print("here6")
-
+                        id = str(uuid4())
                         for cartItem in CART_DICT[table_id].values():
                             if cartItem.get_orderedBy() == message['user'] and cartItem.get_status() == "pending":
                                 print("setting now")
                                 cartItem.set_status("ordered")
-                                print(uuid4())
-                                cartItem.set_order_id(str(uuid4()))
+                                cartItem.set_order_id(id)
                                 print("setting done")
 
                         print("here7")
