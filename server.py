@@ -6,7 +6,7 @@ import stripe
 from cartitem import CartItem
 from uuid import uuid4
 
-stripe.api_key = os.environ.get('STRIPE_TEST_SECRET_KEY')
+stripe.api_key = os.environ.get('STRIPE_LIVE_SECRET_KEY')
 
 CLIENTS = set()
 NUM_CLIENTS = 0
