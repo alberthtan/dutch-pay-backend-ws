@@ -10,6 +10,7 @@ class CartItem:
         self.status = "pending"
         self.table_id = table_id
         self.order_id = None
+        self.tip_amount = 0
 
     def get_id(self):
         return self.id
@@ -39,6 +40,12 @@ class CartItem:
 
     def set_order_id(self, id):
         self.order_id = id
+
+    def get_tip_amount(self):
+        return self.tip_amount
+
+    def set_tip_amount(self, amount):
+        self.tip_amount = amount
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
